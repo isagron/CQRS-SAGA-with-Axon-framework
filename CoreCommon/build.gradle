@@ -1,0 +1,70 @@
+plugins {
+	id 'org.springframework.boot' version '2.4.13-SNAPSHOT'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java-library'
+	id 'maven-publish'
+}
+
+group = 'com.isagron.estore'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '15'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+	maven { url 'https://repo.spring.io/snapshot' }
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.axonframework:axon-spring-boot-starter:4.5.4'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+configurations {
+	[apiElements, runtimeElements].each {
+		it.outgoing.artifacts.removeIf { it.buildDependencies.getDependencies(null).contains(jar) }
+		it.outgoing.artifact(jar)
+	}
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			groupId = 'com.isagron.estore'
+			artifactId = 'CoreCommon'
+			version = '0.0.1-SNAPSHOT'
+			from components.java
+			versionMapping {
+				usage('java-api') {
+					fromResolutionOf('runtimeClasspath')
+				}
+				usage('java-runtime') {
+					fromResolutionResult()
+				}
+			}
+		}
+	}
+}
+
+bootJar {
+	enabled = false
+}
+
+jar {
+	enabled = true
+}
+
+
+test {
+	useJUnitPlatform()
+}

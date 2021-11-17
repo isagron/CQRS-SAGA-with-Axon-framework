@@ -1,0 +1,43 @@
+server:
+  port: 8081
+  error:
+    include-message: always
+    include-binding-errors: always
+spring:
+  application:
+    name: orders-service
+  datasource:
+    url: jdbc:h2:file:~/orders;AUTO_SERVER=true
+    username: root
+    password: isagron
+    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+
+springdoc:
+  api-docs:
+    path: /orders-service/api-dcos
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+
+  instance:
+    # create random unique instance id
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+axon:
+  eventhandling:
+    processors:
+      #name of the group
+      order-group:
+        mode: subscribing

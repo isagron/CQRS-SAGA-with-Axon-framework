@@ -1,0 +1,65 @@
+plugins {
+    id 'org.springframework.boot' version '2.5.4'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+group = 'com.isagron.estore'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '15'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
+    maven { url 'https://repo.spring.io/snapshot' }
+}
+
+ext {
+    set('springCloudVersion', "2020.0.4")
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
+
+// https://mvnrepository.com/artifact/com.h2database/h2
+    implementation group: 'com.h2database', name: 'h2'
+
+
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-eureka-client
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-eureka-client'
+
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
+
+    implementation 'org.axonframework:axon-spring-boot-starter:4.5.3'
+    implementation 'com.thoughtworks.xstream:xstream:1.4.17'
+
+    implementation 'org.springdoc:springdoc-openapi-ui:1.5.2'
+
+    implementation 'com.isagron.estore:CoreCommon:0.0.1-SNAPSHOT'
+
+    //implementation 'io.springfox:springfox-swagger2:3.0.0'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
